@@ -9,7 +9,7 @@ Piece* CheckCheck::checkPieceByJump(std::vector<Piece*> pieces, int destLocation
         destLocation -= jump;
     }
     return nullptr;
-}
+}   
 
 int CheckCheck::checkDiagonal(std::vector<Piece*> pieces, int destLocation, bool isWhiteKing) const
 {
@@ -51,7 +51,8 @@ int CheckCheck::checkKnight(std::vector<Piece*> pieces, int destLocation, bool i
     for (int move : knightMoves)
     {
         int targetLocation = destLocation + move;
-        if (targetLocation >= 0 && targetLocation < 64) {
+        if (targetLocation >= 0 && targetLocation < 64)
+        {
             Piece* piece = pieces[targetLocation];
             if (this->isKnightThreat(piece, isWhiteKing)) { return true; }
         }
@@ -80,7 +81,8 @@ int CheckCheck::checkPawn(std::vector<Piece*> pieces, int destLocation, bool isW
         {
             Piece* piece = pieces[targetLocation];
             if (piece != nullptr &&
-                ((isWhiteKing && piece->getType() == "p") || (!isWhiteKing && piece->getType() == "P"))) {
+                ((isWhiteKing && piece->getType() == "p") || (!isWhiteKing && piece->getType() == "P"))) 
+            {
                 return true;
             }
         }
@@ -91,7 +93,8 @@ int CheckCheck::checkPawn(std::vector<Piece*> pieces, int destLocation, bool isW
 int CheckCheck::Combinecheck(std::vector<Piece*> pieces, int kingLocation) const
 {
     Piece* king = pieces[kingLocation];
-    if (king == nullptr) {
+    if (king == nullptr)
+    {
         return false;
     }
     std::string kingType = king->getType();
@@ -108,7 +111,8 @@ int CheckCheck::Combinecheck(std::vector<Piece*> pieces, int kingLocation) const
 
 bool CheckCheck::isCheckmate(std::vector<Piece*> pieces, int kingLocation) const
 {
-    if (!this->Combinecheck(pieces, kingLocation)) {
+    if (!this->Combinecheck(pieces, kingLocation)) 
+    {
         return false;
     }
 
@@ -116,10 +120,12 @@ bool CheckCheck::isCheckmate(std::vector<Piece*> pieces, int kingLocation) const
     for (int move : kingMoves)
     {
         int targetLocation = kingLocation + move;
-        if (targetLocation >= 0 && targetLocation < 64) {
+        if (targetLocation >= 0 && targetLocation < 64) 
+        {
             Piece* targetPiece = pieces[targetLocation];
             if (targetPiece == nullptr || targetPiece->getColor() != pieces[kingLocation]->getColor()) {
-                if (!Combinecheck(pieces, targetLocation)) {
+                if (!Combinecheck(pieces, targetLocation))
+                {
                     return false;
                 }
             }
@@ -134,12 +140,14 @@ int CheckCheck::checkGameState(std::vector<Piece*> pieces, std::string currentPl
     bool isWhite = (currentPlayerColor == "White");
     bool isBlack = (currentPlayerColor == "Black");
 
-    if (!isWhite && !isBlack) {
+    if (!isWhite && !isBlack) 
+    {
         return 5;  // Invalid color
     }
 
     int kingLocation = getKingLocation(pieces, currentPlayerColor);
-    if (kingLocation == -1) {
+    if (kingLocation == -1) 
+    {
         return 5;  // King not found (invalid)
     }
 
@@ -159,9 +167,11 @@ int CheckCheck::checkGameState(std::vector<Piece*> pieces, std::string currentPl
 
 int CheckCheck::getKingLocation(std::vector<Piece*> pieces, std::string currentPlayerColor) const
 {
-    for (int i = 0; i < 64; ++i) {
+    for (int i = 0; i < 64; ++i) 
+    {
         Piece* piece = pieces[i];
-        if (piece != nullptr && piece->getColor() == currentPlayerColor && (piece->getType() == "K" || piece->getType() == "k")) {
+        if (piece != nullptr && piece->getColor() == currentPlayerColor && (piece->getType() == "K" || piece->getType() == "k")) 
+        {
             return i;
         }
     }

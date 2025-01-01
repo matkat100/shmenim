@@ -53,10 +53,13 @@ int Protocol::returnProtocolNum(const std::string& move)
     SimpleCheck checkSimple;
     CheckCheck checkCheck;
     std::string currentPlayer = isWhiteTurn ? "White" : "Black";
-    int protocolNum = 0;// checkSimple.combineCheck(move, _pieces, currentPlayer);
-    if (protocolNum == 0) {
-        //protocolNum = checkCheck.checkGameState(_pieces, currentPlayer);
-        if (protocolNum == 0 || protocolNum == 2 || protocolNum == 8) {
+    int protocolNum = 0; 
+    checkSimple.combineCheck(move, _pieces, currentPlayer);
+    if (protocolNum == 0) 
+    {
+        protocolNum = checkCheck.checkGameState(_pieces, currentPlayer);
+        if (protocolNum == 0 || protocolNum == 2 || protocolNum == 8) 
+        {
             isWhiteTurn = !isWhiteTurn;
             this->swapSquares(move);
         }
@@ -73,9 +76,4 @@ void Protocol::swapSquares(const std::string& move)
     int dest = (move[2] - 'a') + (8 * (7 - (move[3] - '1')));
     this->_pieces[dest] = _pieces[current];
     this->_pieces[current] = nullptr;
-    for (Piece* p : this->_pieces)
-    {
-        if (p != nullptr) { std::cout << p->getType() << std::endl; }
-        else { std::cout << "0" << std::endl; }
-    }
 }
