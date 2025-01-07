@@ -69,8 +69,10 @@ bool SimpleCheck::moveCheck(std::string move, std::vector<Piece*> pieces) const 
     // Handle Pawn movement
     if (currentPiece == "P" || currentPiece == "p") {
         int direction = (currentPiece == "P") ? -1 : 1;  // White pawns move up (-1), Black pawns move down (+1)
-        int dx = move[2] - move[0];  // Horizontal difference
-        int dy = move[3] - move[1];  // Vertical difference
+        int dx = move[0] - move[2];  // Horizontal difference
+        int dy = move[1] - move[3];  // Vertical difference
+
+        bool _return = true;
 
         // Calculate srcIdx and dstIdx using your method
         int srcIdx = (move[0] - 'a') + (8 * (7 - (move[1] - '1')));  // Source index
@@ -78,19 +80,20 @@ bool SimpleCheck::moveCheck(std::string move, std::vector<Piece*> pieces) const 
 
         // Single forward move (Pawn moves one square forward)
         if (dx == 0 && dy == direction) {
-            if (pieces[dstIdx] == nullptr) return false;  // Destination must be empty
+            if (pieces[dstIdx] == nullptr) _return  = false;  // Destination must be empty
         }
         // Double forward move (Only from initial rows: 1 for black, 6 for white)
-        else if (dx == 0 && dy == 2 * direction) {
+        if (dx == 0 && dy == 2 * direction) {
             int initialRow = (currentPiece == "P") ? 6 : 1;  // White starts at row 6, Black at row 1
             int srcRow = 8 - (move[1] - '1');  // Source row (0-indexed)
             int midIdx = srcIdx + (direction * 8);  // Middle square index
-            if (srcRow != initialRow || pieces[midIdx] != nullptr || pieces[dstIdx] != nullptr) return false;  // Path must be clear
+            if (srcRow != initialRow || pieces[midIdx] != nullptr || pieces[dstIdx] != nullptr) _return = false;  // Path must be clear
         }
         // Diagonal capture (Pawn moves diagonally to capture)
-        else if (abs(dx) == 1 && dy == direction) {
-            if (pieces[dstIdx] == nullptr || pieces[dstIdx]->getColor() == pieces[srcIdx]->getColor()) return false;  // Must capture opponent
+        if (abs(dx) == 1 && dy == direction) {
+            if (pieces[dstIdx] == nullptr || pieces[dstIdx]->getColor() == pieces[srcIdx]->getColor()) _return = false;  // Must capture opponent
         }
+        return !_return;
     }
     return true;
 }
