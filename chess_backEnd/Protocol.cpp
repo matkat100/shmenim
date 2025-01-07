@@ -7,7 +7,9 @@
 #include "Pawn.h"
 #include "CheckCheck.h"
 #include "SimpleCheck.h"
+#include <iostream>
 
+using std::cout;
 
 bool Protocol::isWhiteTurn = false;
 
@@ -17,8 +19,8 @@ Protocol::Protocol()
     this->_pieces.push_back(new Rook("Black"));
     this->_pieces.push_back(new Knight("Black"));
     this->_pieces.push_back(new Bishop("Black"));
-    this->_pieces.push_back(new Queen("Black"));
     this->_pieces.push_back(new King("Black"));
+    this->_pieces.push_back(new Queen("Black"));
     this->_pieces.push_back(new Bishop("Black"));
     this->_pieces.push_back(new Knight("Black"));
     this->_pieces.push_back(new Rook("Black"));
@@ -34,8 +36,8 @@ Protocol::Protocol()
     this->_pieces.push_back(new Rook("White"));
     this->_pieces.push_back(new Knight("White"));
     this->_pieces.push_back(new Bishop("White"));
-    this->_pieces.push_back(new Queen("White"));
     this->_pieces.push_back(new King("White"));
+    this->_pieces.push_back(new Queen("White"));
     this->_pieces.push_back(new Bishop("White"));
     this->_pieces.push_back(new Knight("White"));
     this->_pieces.push_back(new Rook("White"));
@@ -53,20 +55,49 @@ int Protocol::returnProtocolNum(const std::string& move)
     SimpleCheck checkSimple;
     CheckCheck checkCheck;
     std::string currentPlayer = isWhiteTurn ? "White" : "Black";
-    int protocolNum = 0; 
-    checkSimple.combineCheck(move, _pieces, currentPlayer);
-    if (protocolNum == 0) 
+    int protocolNum = checkSimple.combineCheck(move, _pieces, currentPlayer);
+
+    if (protocolNum == 0)
     {
         protocolNum = checkCheck.checkGameState(_pieces, currentPlayer);
-        if (protocolNum == 0 || protocolNum == 2 || protocolNum == 8) 
+
+        if (protocolNum == 0 || protocolNum == 1 || protocolNum == 8)
         {
             isWhiteTurn = !isWhiteTurn;
             this->swapSquares(move);
+            std::string opposingPlayer = isWhiteTurn ? "Black" : "White";
+            int kingLocation = checkCheck.getKingLocation(_pieces, opposingPlayer);
+
+            if (checkCheck.Combinecheck(_pieces, kingLocation))
+            {
+                if (checkCheck.isCheckmate(_pieces, kingLocation))
+                {
+                    protocolNum = 8;
+                }
+                else
+                {
+                    protocolNum = 1;
+                }
+            }
         }
     }
 
+    for (Piece* piece : _pieces)
+    {
+        if (piece == nullptr)
+        {
+            std::cout << "0";
+        }
+        else
+        {
+            std::cout << piece->getType();
+        }
+    }
+    std::cout << "\n";
+
     return protocolNum;
 }
+
 
 void Protocol::swapSquares(const std::string& move)
 {

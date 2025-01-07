@@ -5,7 +5,6 @@
 class SimpleCheck
 {
 public:
-	bool legalSquare(std::string move) const;
 	bool theSameSquare(std::string move) const;
 	bool currentSquareIsUnoccupiedByPlayer(std::string move, std::vector<Piece*> pieces, std::string currentPlayer) const;
 	bool NextSquareIsOccupiedByPlayer(std::string move, std::vector<Piece*> pieces, std::string currentPlayer) const;
